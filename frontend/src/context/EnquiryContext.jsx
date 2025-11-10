@@ -14,16 +14,22 @@ export const EnquiryProvider = ({ children }) => {
 
   //  Fetch all enquiries (Admins & Staff see all; Users see their own)
   const fetchEnquiries = async () => {
-    if (!token) return;
+    if (!token) {
+      setEnquiries([]);
+      return;
+    }
     setLoading(true);
+    setError("");
     try {
       const { data } = await axios.get(API_URL, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setEnquiries(data.enquiries || []);
+      // Force state update with new array reference
+      setEnquiries([...(data.enquiries || [])]);
     } catch (err) {
       console.error("❌ Error fetching enquiries:", err);
       setError("Failed to fetch enquiries");
+      setEnquiries([]);
     } finally {
       setLoading(false);
     }
@@ -71,9 +77,13 @@ export const EnquiryProvider = ({ children }) => {
     }
   };
 
-  //  Auto fetch on mount or when token changes
+  //  Auto fetch when token changes (login/logout)
   useEffect(() => {
-    fetchEnquiries();
+    if (token) {
+      fetchEnquiries();
+    } else {
+      setEnquiries([]);
+    }
   }, [token]);
 
   return (

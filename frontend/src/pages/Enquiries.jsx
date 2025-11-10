@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useEnquiries } from "../context/EnquiryContext";
 import { AuthContext } from "../context/AuthContext";
 import Loader from "../components/Loader";
@@ -22,6 +22,11 @@ const Enquiries = () => {
 
   const token = localStorage.getItem("token");
   const isAdminOrStaff = user?.role === "admin" || user?.role === "staff";
+
+  // Fetch enquiries when component mounts to ensure fresh data
+  useEffect(() => {
+    fetchEnquiries();
+  }, []);
 
   const validateEmail = (email) => {
     if (!email) return true; // optional
@@ -54,12 +59,13 @@ const Enquiries = () => {
     }
 
     try {
-      await axios.post(`${API_BASE_URL}/enquiries`, form, {
+      const response = await axios.post(`${API_BASE_URL}/enquiries`, form, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("✅ Enquiry created successfully!");
       setForm({ customerName: "", email: "", phone: "", message: "" });
-      fetchEnquiries();
+      // Immediately fetch updated enquiries to reflect changes
+      await fetchEnquiries();
     } catch (err) {
       console.error(err);
       const errorMsg = err.response?.data?.msg || err.response?.data?.errors?.[0]?.message || "Failed to create enquiry";
@@ -74,7 +80,8 @@ const Enquiries = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("🗑 Enquiry deleted successfully");
-      fetchEnquiries();
+      // Immediately fetch updated enquiries to reflect changes
+      await fetchEnquiries();
     } catch (err) {
       console.error(err);
       alert("❌ Failed to delete enquiry");
@@ -88,7 +95,8 @@ const Enquiries = () => {
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      fetchEnquiries();
+      // Immediately fetch updated enquiries to reflect changes
+      await fetchEnquiries();
     } catch (err) {
       console.error(err);
       alert("❌ Failed to update status");
@@ -136,7 +144,8 @@ const Enquiries = () => {
       );
       alert("✅ Enquiry updated successfully!");
       setEditingId(null);
-      fetchEnquiries();
+      // Immediately fetch updated enquiries to reflect changes
+      await fetchEnquiries();
     } catch (err) {
       console.error(err);
       const errorMsg = err.response?.data?.msg || "Failed to update enquiry";

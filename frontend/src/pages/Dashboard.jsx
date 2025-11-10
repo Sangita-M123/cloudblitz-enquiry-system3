@@ -9,10 +9,12 @@ const Dashboard = () => {
   const [stats, setStats] = useState({ total: 0, new: 0, inProgress: 0, closed: 0 });
 
   useEffect(() => {
-    if (enquiries.length === 0) {
-      fetchEnquiries();
-    }
+    // Always fetch fresh data when dashboard loads
+    fetchEnquiries();
+  }, []);
 
+  useEffect(() => {
+    // Recalculate stats whenever enquiries change
     const computedStats = {
       total: enquiries.length,
       new: enquiries.filter((e) => e.status === "New").length,

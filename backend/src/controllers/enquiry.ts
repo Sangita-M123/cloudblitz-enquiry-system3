@@ -32,7 +32,10 @@ export const getAllEnquiries = async (req: AuthRequest, res: Response) => {
     if (req.user?.role !== "admin" && req.user?.role !== "staff") {
       filter.createdBy = req.user?._id;
     }
-    const enquiries = await Enquiry.find(filter).populate("createdBy", "name email").populate("assignedTo", "name email");
+    const enquiries = await Enquiry.find(filter)
+      .populate("createdBy", "name email")
+      .populate("assignedTo", "name email")
+      .sort({ createdAt: -1 }); // Sort by newest first
     res.json({ ok: true, enquiries });
   } catch (err: any) {
     res.status(500).json({ ok: false, msg: err.message });

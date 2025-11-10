@@ -1,163 +1,228 @@
-# 🚀 Quick Start Guide
+# ⚡ Quick Start Guide
 
-Get CloudBlitz up and running in 5 minutes!
-
-## Prerequisites Check
-
-Before starting, ensure you have:
-- ✅ Node.js v16+ installed (`node --version`)
-- ✅ npm installed (`npm --version`)
-- ✅ Internet connection (for MongoDB Atlas)
-
-## Step 1: Install Dependencies (2 minutes)
-
-Open your terminal in the project root directory:
-
-```bash
-# Install backend dependencies
-cd backend
-npm install
-
-# Install frontend dependencies
-cd ../frontend
-npm install
-```
-
-## Step 2: Start the Servers (1 minute)
-
-Open **TWO terminal windows**:
+## Development Mode (Separate Servers)
 
 ### Terminal 1 - Backend
 ```bash
-cd backend
-npm run dev
-```
-✅ You should see: `🚀 Server running on port 5000`
-
-### Terminal 2 - Frontend
-```bash
-cd frontend
-npm run dev
-```
-✅ You should see: `Local: http://localhost:5173/`
-
-## Step 3: Open the Application
-
-Open your browser and go to:
-```
-http://localhost:5173
-```
-
-## Step 4: Create Your First Account
-
-1. You'll see the **Register** page
-2. Fill in:
-   - Name: Your name
-   - Email: your@email.com
-   - Password: minimum 6 characters
-3. Click **Register**
-4. You'll be automatically logged in and redirected to the Dashboard
-
-## Step 5: Test the Features
-
-### As a Normal User:
-1. Click **Enquiries** in the navigation
-2. Create a new enquiry:
-   - Customer Name: Test Customer
-   - Email: test@example.com (optional)
-   - Phone: +1234567890 (optional)
-   - Message: This is a test enquiry (min 10 characters)
-3. Click **Add Enquiry**
-4. You'll see your enquiry in the table
-5. Click **Edit** to modify the name or message
-6. Notice: Status is read-only (you can't change it)
-
-### Upgrade to Admin (for testing):
-1. Go to MongoDB Atlas: https://cloud.mongodb.com
-2. Login with your credentials
-3. Navigate to: Cluster0 → Browse Collections → cloudblitz → users
-4. Find your user and click Edit
-5. Change `"role": "user"` to `"role": "admin"`
-6. Save
-7. Logout and login again
-
-### As an Admin:
-1. Click **Admin Panel** in navigation
-2. You'll see all users
-3. You can change user roles
-4. You can delete users
-5. Go to **Enquiries**
-6. You can now change status using the dropdown
-7. You can delete enquiries
-
-## 🎯 Quick Feature Test Checklist
-
-- [ ] Register a new account
-- [ ] Login successfully
-- [ ] Create an enquiry
-- [ ] Edit your enquiry (name and message)
-- [ ] Verify status is read-only for normal users
-- [ ] Upgrade to admin role in MongoDB
-- [ ] Access admin panel
-- [ ] Change user roles
-- [ ] Update enquiry status
-- [ ] Delete an enquiry
-
-## 🐛 Troubleshooting
-
-### Backend won't start
-```bash
-# Check if port 5000 is in use
-netstat -ano | findstr :5000
-
-# If in use, kill the process or change port in backend/.env
-```
-
-### Frontend won't start
-```bash
-# Clear cache and reinstall
-cd frontend
-rm -rf node_modules
+cd cloudblitz-enquiry-system/backend
 npm install
 npm run dev
 ```
+Backend runs on: http://localhost:5000
 
-### Can't login
-- Check backend terminal for errors
-- Verify MongoDB connection is successful
-- Clear browser localStorage and try again
-
-### Enquiries not showing
-- Open browser DevTools (F12)
-- Check Console for errors
-- Check Network tab for failed API calls
-- Verify backend is running on port 5000
-
-## 📚 Next Steps
-
-1. Read the full [README.md](README.md) for detailed features
-2. Check [API_DOCUMENTATION.md](API_DOCUMENTATION.md) for API reference
-3. Review [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md) for technical details
-4. See [CHANGELOG.md](CHANGELOG.md) for version history
-
-## 🎉 You're All Set!
-
-Your CloudBlitz Enquiry Management System is now running. Explore the features and test different user roles!
-
-### Default Credentials
-There are no default credentials. You need to:
-1. Register a new account
-2. Update the role in MongoDB to test admin/staff features
-
-### API Base URL
-- Backend: `http://localhost:5000/api`
-- Frontend: `http://localhost:5173`
-
-### Database
-- MongoDB Atlas (already configured)
-- Database: cloudblitz
-- Collections: users, enquiries
+### Terminal 2 - Frontend
+```bash
+cd cloudblitz-enquiry-system/frontend
+npm install
+npm run dev
+```
+Frontend runs on: http://localhost:5173
 
 ---
 
-**Need Help?** Check the [RUN_GUIDE.md](RUN_GUIDE.md) for detailed instructions.
+## Production Mode (Single Server)
+
+### Build & Run
+```bash
+# Step 1: Build frontend
+cd cloudblitz-enquiry-system/frontend
+npm install
+npm run build
+
+# Step 2: Build backend
+cd ../backend
+npm install
+npm run build
+
+# Step 3: Run production server
+npm run start:dev
+```
+
+Visit: http://localhost:5000
+
+### Or Use One Command (from backend folder)
+```bash
+cd cloudblitz-enquiry-system/backend
+npm run build:all
+npm run start:dev
+```
+
+---
+
+## Environment Setup
+
+### Backend (.env file)
+Create `backend/.env`:
+```env
+NODE_ENV=development
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key_here
+PORT=5000
+```
+
+### Frontend (.env file)
+Already configured:
+- `.env.development` - Uses http://localhost:5000/api
+- `.env.production` - Uses /api (relative path)
+
+---
+
+## First Time Setup
+
+```bash
+# 1. Clone/Download the project
+cd cloudblitz-enquiry-system
+
+# 2. Install all dependencies
+cd backend && npm install
+cd ../frontend && npm install
+
+# 3. Configure environment variables
+# Edit backend/.env with your MongoDB URI
+
+# 4. Start development servers
+# Terminal 1:
+cd backend && npm run dev
+
+# Terminal 2:
+cd frontend && npm run dev
+```
+
+---
+
+## Testing the Application
+
+### 1. Register a User
+- Go to http://localhost:5173 (dev) or http://localhost:5000 (prod)
+- Click "Register"
+- Fill in the form
+- Submit
+
+### 2. Login
+- Use your registered credentials
+- You'll be redirected to dashboard
+
+### 3. Create Enquiry
+- Go to "Enquiries" page
+- Click "Create New Enquiry"
+- Fill in the form
+- Submit
+
+### 4. Test Admin Features
+- Update user role to "admin" in MongoDB
+- Login again
+- Access Admin Panel
+
+---
+
+## Common Commands
+
+```bash
+# Development
+npm run dev              # Start dev server (backend or frontend)
+
+# Building
+npm run build            # Build TypeScript/React
+npm run build:all        # Build frontend + backend (backend only)
+
+# Production
+npm start                # Run production server (backend)
+npm run start:dev        # Run with NODE_ENV=production (backend)
+
+# Code Quality
+npm run lint             # Run ESLint
+npm run format           # Run Prettier
+```
+
+---
+
+## Ports
+
+- **Backend API**: 5000
+- **Frontend Dev**: 5173
+- **Production**: 5000 (serves both)
+
+---
+
+## Default Credentials
+
+No default credentials. You must register a new user.
+
+To make a user admin:
+1. Register normally
+2. Go to MongoDB Atlas
+3. Find your user in the `users` collection
+4. Change `role` field to `"admin"`
+5. Login again
+
+---
+
+## Troubleshooting
+
+### Port Already in Use
+```bash
+# Windows
+netstat -ano | findstr :5000
+taskkill /PID <PID> /F
+
+# Linux/Mac
+lsof -ti:5000 | xargs kill -9
+```
+
+### MongoDB Connection Error
+- Check MONGO_URI in .env
+- Verify MongoDB Atlas network access (0.0.0.0/0)
+- Check database user credentials
+
+### Frontend Can't Connect to Backend
+- Verify backend is running on port 5000
+- Check VITE_API_URL in frontend/.env.development
+- Check browser console for CORS errors
+
+### Build Errors
+```bash
+# Clear node_modules and reinstall
+rm -rf node_modules package-lock.json
+npm install
+
+# Clear build cache
+rm -rf dist
+npm run build
+```
+
+---
+
+## Project Structure
+
+```
+cloudblitz-enquiry-system/
+├── backend/              # Node.js + Express + TypeScript
+│   ├── src/             # Source code
+│   ├── dist/            # Compiled JavaScript
+│   └── .env             # Environment variables
+├── frontend/            # React + Vite
+│   ├── src/             # Source code
+│   ├── dist/            # Production build
+│   └── .env.*           # Environment configs
+└── README.md            # Main documentation
+```
+
+---
+
+## Next Steps
+
+1. ✅ Get the app running locally
+2. ✅ Test all features
+3. ✅ Read [RENDER_DEPLOYMENT_GUIDE.md](RENDER_DEPLOYMENT_GUIDE.md)
+4. ✅ Deploy to Render
+5. ✅ Share with users
+
+---
+
+## Need Help?
+
+- Check [README.md](README.md) for detailed documentation
+- See [API_DOCUMENTATION.md](API_DOCUMENTATION.md) for API reference
+- Review [DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md) before deploying
+
+Happy coding! 🚀
